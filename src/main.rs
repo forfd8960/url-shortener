@@ -1,3 +1,4 @@
+use sqlx::PgPool;
 use tokio::net::TcpListener;
 use tracing::{info, level_filters::LevelFilter};
 use tracing_subscriber::{fmt::Layer, layer::SubscriberExt, util::SubscriberInitExt, Layer as _};
@@ -13,7 +14,12 @@ async fn main() -> anyhow::Result<()> {
     let listener = TcpListener::bind(&addr).await?;
     info!("URL Shortener Listening on: {}", addr);
 
-    let state = AppState::new();
+    let db_url = dotenv::var("DATABASE_URL").unwrap();
+
+    let pool = PgPool::connect(&db_url).await?;
+    println!("connected database: {:?}", pool);
+
+    let state = AppState::new(pool);
     let app = get_router(state).await?;
 
     info!("starting URL Shortener service...");

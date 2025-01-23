@@ -1,5 +1,5 @@
 use axum::{
-    extract::State,
+    extract::{Path, State},
     response::IntoResponse,
     routing::{get, post},
     Json, Router,
@@ -18,19 +18,28 @@ pub async fn get_router(state: AppState) -> Result<Router, AppError> {
     let api_router = Router::new()
         .route("/index", get(index))
         .route("/shorten", post(shorten_url))
+        .route("/redirect/{url_id}", get(redirect))
         .with_state(state);
 
     Ok(api_router)
 }
 
-pub async fn index() -> Result<impl IntoResponse, AppError> {
+async fn index() -> Result<impl IntoResponse, AppError> {
     Ok("Hello, World!")
 }
 
-pub async fn shorten_url(
+async fn shorten_url(
     State(state): State<AppState>,
     Json(req): Json<ShortenRequest>,
 ) -> Result<impl IntoResponse, AppError> {
     info!("shorten url: {}", req.url);
+    Ok("Hello, World!")
+}
+
+async fn redirect(
+    Path(url_id): Path<String>,
+    State(state): State<AppState>,
+) -> Result<impl IntoResponse, AppError> {
+    info!("redirect url_id: {}", url_id);
     Ok("Hello, World!")
 }

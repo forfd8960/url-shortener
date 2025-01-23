@@ -1,14 +1,17 @@
 use std::{collections::HashMap, ops::Deref, sync::Arc};
 
+use sqlx::PgPool;
+
 #[derive(Debug, Clone)]
 pub struct AppState {
     pub inner: Arc<AppStateInner>,
 }
 
 impl AppState {
-    pub fn new() -> Self {
+    pub fn new(pool: PgPool) -> Self {
         let inner = Arc::new(AppStateInner {
             cache: HashMap::new(),
+            pool,
         });
 
         Self { inner }
@@ -25,4 +28,5 @@ impl Deref for AppState {
 #[derive(Debug, Clone)]
 pub struct AppStateInner {
     pub cache: HashMap<String, String>,
+    pub pool: PgPool,
 }
