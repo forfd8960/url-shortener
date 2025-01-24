@@ -18,7 +18,7 @@ pub async fn get_router(state: AppState) -> Result<Router, AppError> {
     let api_router = Router::new()
         .route("/index", get(index))
         .route("/shorten", post(shorten_url))
-        .route("/redirect/{url_id}", get(redirect))
+        .route("/r/{url_id}", get(redirect))
         .with_state(state);
 
     Ok(api_router)
