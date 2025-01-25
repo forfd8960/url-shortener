@@ -1,9 +1,12 @@
 use crate::errors::AppError;
 
-use super::ShortURL;
+use super::{CreateShortURL, ShortURL};
 use sqlx::PgPool;
 
-pub async fn create_short_url(pool: &PgPool, short_url: ShortURL) -> Result<ShortURL, AppError> {
+pub async fn create_short_url(
+    pool: &PgPool,
+    short_url: CreateShortURL,
+) -> Result<ShortURL, AppError> {
     let res = sqlx::query_as(
         r#"
         INSERT INTO short_urls (origin_url, url_uid)

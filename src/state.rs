@@ -12,6 +12,7 @@ impl AppState {
         let inner = Arc::new(AppStateInner {
             cache: HashMap::new(),
             pool,
+            host: "http://localhost:8989".to_string(),
         });
 
         Self { inner }
@@ -29,4 +30,5 @@ impl Deref for AppState {
 pub struct AppStateInner {
     pub cache: HashMap<String, String>,
     pub pool: PgPool,
+    pub host: String,
 }

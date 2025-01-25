@@ -11,3 +11,9 @@ pub struct ShortURL {
     pub url_uid: String,
     pub created_at: DateTime<Utc>,
 }
+
+#[derive(Debug, Clone)]
+pub struct CreateShortURL {
+    pub origin_url: String,
+    pub url_uid: String,
+}
