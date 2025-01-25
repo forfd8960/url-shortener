@@ -10,6 +10,9 @@ pub enum AppError {
     #[error("url error: {0}")]
     URLError(#[from] url::ParseError),
 
+    #[error("url error: {0}")]
+    NotHTTPProtocol(String),
+
     #[error("URL: {0} not found")]
     NotFound(String),
 }
@@ -20,6 +23,7 @@ impl IntoResponse for AppError {
             AppError::NotFound(_) => StatusCode::NOT_FOUND,
             AppError::SqlxError(_) => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::URLError(_) => StatusCode::BAD_REQUEST,
+            AppError::NotHTTPProtocol(_) => StatusCode::BAD_REQUEST,
         };
 
         (status_code, format!("{:?}", self)).into_response()

@@ -28,6 +28,11 @@ impl Handler {
         // 4. return the short_url.
 
         let url = Url::parse(origin_url)?;
+        match url.scheme() {
+            "http" | "https" => {}
+            _ => return Err(AppError::NotHTTPProtocol("Not HTTP protocol".to_string())),
+        }
+
         let url_uid = nanoid!(20);
         let req = urls::create_short_url(
             &self.state.pool,
