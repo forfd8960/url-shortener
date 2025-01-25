@@ -40,4 +40,16 @@ impl Handler {
 
         Ok(format!("{}/r/{}", self.state.host, req.url_uid))
     }
+
+    pub async fn get_origin_url(&self, url_id: &str) -> Result<String, AppError> {
+        // 1. get the origin_url by url_id
+        // 2. return the origin_url
+
+        let res = urls::get_origin_url_by_uid(&self.state.pool, url_id).await?;
+
+        match res {
+            Some(url) => Ok(url.origin_url),
+            None => Err(AppError::NotFound(url_id.to_string())),
+        }
+    }
 }

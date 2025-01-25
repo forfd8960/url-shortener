@@ -28,3 +28,17 @@ Indexes:
     "short_urls_pkey" PRIMARY KEY, btree (id)
     "short_urls_url_uid" UNIQUE, btree (url_uid)
 ```
+
+## Run Server
+
+![alt text](image-3.png)
+
+## Gen Short URL
+
+![gen_short_url](image.png)
+
+## Redirect to Original
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)

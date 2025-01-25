@@ -1,13 +1,13 @@
 use axum::{
     extract::{Path, State},
-    response::IntoResponse,
+    response::{IntoResponse, Redirect},
     routing::{get, post},
     Json, Router,
 };
 use serde::Deserialize;
 use tracing::info;
 
-use crate::{errors::AppError, state::AppState};
+use crate::{errors::AppError, handlers::Handler, state::AppState};
 
 #[derive(Debug, Deserialize)]
 pub struct ShortenRequest {
@@ -33,7 +33,12 @@ async fn shorten_url(
     Json(req): Json<ShortenRequest>,
 ) -> Result<impl IntoResponse, AppError> {
     info!("shorten url: {}", req.url);
-    Ok("Hello, World!")
+
+    let handler = Handler::new(state);
+    let short_url = handler.gen_short_url(&req.url).await?;
+    info!("generated short URL: {}", short_url);
+
+    Ok(short_url)
 }
 
 async fn redirect(
@@ -41,5 +46,7 @@ async fn redirect(
     State(state): State<AppState>,
 ) -> Result<impl IntoResponse, AppError> {
     info!("redirect url_id: {}", url_id);
-    Ok("Hello, World!")
+
+    let origin_url = Handler::new(state).get_origin_url(&url_id).await?;
+    Ok(Redirect::permanent(&origin_url).into_response())
 }
